@@ -1,2 +1,2 @@
-# AI_3rdYr_Dissertation
+# AI 3rd Year Dissertation
 My dissertation
