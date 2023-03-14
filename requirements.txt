@@ -1,0 +1,1 @@
+git+https://github.com/florian1345/python-solidity-parser@eb548d1#egg=solidity_parser

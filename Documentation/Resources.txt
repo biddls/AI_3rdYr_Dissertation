@@ -1,0 +1,16 @@
+https://arxiv.org/pdf/2103.09113.pdf
+https://www.google.com/search?q=EVM+CFG+python&rlz=1C1GCEJ_enGB1047GB1047&oq=EVM+CFG+python&aqs=chrome..69i57j69i60.3488j0j7&sourceid=chrome&ie=UTF-8
+https://github.com/crytic/evm_cfg_builder
+https://snyk.io/advisor/python/evm-cfg-builder
+https://www.alchemy.com/dapps/brownie
+https://eth-abi.readthedocs.io/en/latest/eth_abi.html#module-eth_abi.decoding
+https://www.ndss-symposium.org/wp-content/uploads/2023/02/ndss2023_s263_paper.pdf
+
+# connect to any RPC and given the addresses and the "target" it'll download the byte code, turn that into a graph and go ham trying to change that value
+# then mby report back or generate an output in a PDF or something IDFK
+# thus any testing software can be connected to via the locally hosted node they will be running
+https://ethereum.github.io/execution-apis/api-documentation/
+https://github.com/ethereum/execution-apis
+https://ethereum.org/en/developers/docs/apis/json-rpc/
+https://www.google.com/search?q=use+json+rpc+calls+to+get+byte+code+from+a+local+testnet+node&rlz=1C1GCEJ_enGB1047GB1047&oq=use+json+rpc+calls+to+get+byte+code+from+a+local+testnet+node&aqs=chrome..69i57.6895j0j4&sourceid=chrome&ie=UTF-8
+https://book.getfoundry.sh/anvil/

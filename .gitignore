@@ -1,1 +1,8 @@
 .idea/
+venv/
+__pycache__/
+contracts/.idea/
+contracts/artifacts/
+contracts/cache/
+contracts/node_modules/
+contracts/typechain-types/
