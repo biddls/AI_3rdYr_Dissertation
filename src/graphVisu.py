@@ -1,20 +1,6 @@
 from matplotlib.pylab import show
 import networkx as nx
-
-
-def funcParse(func: str) -> str:
-    return parse(func, True)
-
-
-def varParse(var: str) -> str:
-    return parse(var, False)
-
-
-def parse(_in: str, func: bool) -> str:
-    _in = _in.split('.')
-    _in.insert(1, 'F' if func else 'V')
-    _in = '.'.join(_in)
-    return _in
+import warnings
 
 
 class graphManager:
@@ -30,7 +16,7 @@ class graphManager:
     def addContract(self, cont: str):
         self.__G.add_node(cont)
         if cont in self.__data.keys():
-            raise Exception(f"Contract {cont} already exists")  # TODO: custom exception
+            warnings.warn(f"Contract {cont} already exists")
         else:
             self.__data[cont] = {}
 
@@ -67,6 +53,8 @@ class graphManager:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.__draw:
+            if self.__G.number_of_nodes() == 0:
+                raise Exception("Graph is empty")
             self.draw()
         else:
             pass
@@ -97,10 +85,9 @@ class graphManager:
         nx.draw(
             self.__G,
             pos,
-            node_color='pink',
-            node_size=1000,
-            alpha=1,
-            with_labels=True
+            node_shape="s",
+            with_labels=True,
+            bbox=dict(facecolor="pink", edgecolor='black', boxstyle='round,pad=0.2')
             # connectionstyle='arc3, rad = 0.05'
         )
 
@@ -110,12 +97,27 @@ class graphManager:
             pos,
             self.__edge_labels,
             rotate=False,
-            label_pos=0.25,
+            label_pos=0.5,
             bbox=dict(boxstyle='round', fc='white', alpha=1)
         )
 
         # shows the graph
         show()
+
+
+def funcParse(func: str) -> str:
+    return parse(func, True)
+
+
+def varParse(var: str) -> str:
+    return parse(var, False)
+
+
+def parse(_in: str, func: bool) -> str:
+    _in = _in.split('.')
+    _in.insert(1, 'F' if func else 'V')
+    _in = '.'.join(_in)
+    return _in
 
 
 if __name__ == '__main__':
