@@ -6,3 +6,4 @@ contracts/artifacts/
 contracts/cache/
 contracts/node_modules/
 contracts/typechain-types/
+src/graph.pickle

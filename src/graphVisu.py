@@ -1,3 +1,5 @@
+# import json
+import pickle
 from matplotlib.pylab import show
 import networkx as nx
 import warnings
@@ -51,10 +53,21 @@ class graphManager:
         self.__G.add_edge(node1, node2)
         self.__edge_labels[(node1, node2)] = label
 
+    def save(self, path: str):
+        # save graph object to file
+        with open(path, 'wb') as f:
+            pickle.dump(self.__G, f)
+
+    def load(self, path: str):
+        # load graph object from file
+        with open(path, 'rb') as f:
+            self.__G = pickle.load(f)
+
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.save('graph.pickle')
         if self.__draw:
             if self.__G.number_of_nodes() == 0:
-                raise Exception("Graph is empty")
+                warnings.warn("Graph is empty")
             self.draw()
         else:
             pass
@@ -69,9 +82,10 @@ class graphManager:
         #     for cont in keys
         # ]
         # pos = nx.shell_layout(self.G, nlist)
-
-        pos = nx.circular_layout(sorted(self.__G.nodes()))
-
+        # nodeOrdering(self.__G.nodes())
+        pos = nx.circular_layout(nodeOrdering(self.__G.nodes()))
+        # sorted(self.__G.nodes())
+        # print(self.__G.nodes())
         # TODO: colours the nodes
         # color_map = []
         # for node in G:
@@ -85,9 +99,11 @@ class graphManager:
         nx.draw(
             self.__G,
             pos,
-            node_shape="s",
-            with_labels=True,
-            bbox=dict(facecolor="pink", edgecolor='black', boxstyle='round,pad=0.2')
+            node_color='pink',
+            node_size=4000,
+            node_shape="o",
+            with_labels=True
+            # bbox=dict(facecolor="pink", edgecolor='black', boxstyle='round,pad=0.2')
             # connectionstyle='arc3, rad = 0.05'
         )
 
@@ -103,6 +119,23 @@ class graphManager:
 
         # shows the graph
         show()
+
+
+def nodeOrdering(nodes: [str]) -> [str]:
+    new = []
+    cont = ''
+    current = 'F'
+    for index, node in enumerate(sorted(nodes)):
+        if node.split('.')[0] == node:
+            cont = node
+        elif node.split('.')[1] != current:
+            if current == 'F':
+                new.append(cont)
+            new.append(node)
+            current = node.split('.')[1]
+        else:
+            new.append(node)
+    return new
 
 
 def funcParse(func: str) -> str:
