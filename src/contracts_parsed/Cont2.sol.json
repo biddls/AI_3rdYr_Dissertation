@@ -9,8 +9,10 @@
         {
             "type": "ImportDirective",
             "path": "./Cont1.sol",
-            "symbolAliases": {},
-            "unitAlias": "\"./Cont1.sol\""
+            "symbolAliases": {
+                "Cont1": null
+            },
+            "unitAlias": null
         },
         {
             "type": "ContractDefinition",
@@ -44,25 +46,77 @@
                     }
                 },
                 {
+                    "type": "StateVariableDeclaration",
+                    "variables": [
+                        {
+                            "type": "VariableDeclaration",
+                            "typeName": {
+                                "type": "UserDefinedTypeName",
+                                "namePath": "Cont1"
+                            },
+                            "name": "cont1",
+                            "expression": null,
+                            "visibility": "public",
+                            "isStateVar": true,
+                            "isDeclaredConst": false,
+                            "isDeclaredImmutable": false,
+                            "isIndexed": false
+                        }
+                    ],
+                    "initialValue": null
+                },
+                {
                     "type": "FunctionDefinition",
                     "name": "constructor",
                     "parameters": {
                         "type": "ParameterList",
-                        "parameters": []
+                        "parameters": [
+                            {
+                                "type": "Parameter",
+                                "typeName": {
+                                    "type": "ElementaryTypeName",
+                                    "name": "address"
+                                },
+                                "name": "_cont1",
+                                "storageLocation": null,
+                                "isStateVar": false,
+                                "isIndexed": false
+                            }
+                        ]
                     },
                     "returnParameters": [],
                     "body": {
                         "type": "Block",
-                        "statements": []
+                        "statements": [
+                            {
+                                "type": "ExpressionStatement",
+                                "expression": {
+                                    "type": "BinaryOperation",
+                                    "operator": "=",
+                                    "left": {
+                                        "type": "Identifier",
+                                        "name": "cont1"
+                                    },
+                                    "right": {
+                                        "type": "FunctionCall",
+                                        "expression": {
+                                            "type": "Identifier",
+                                            "name": "Cont1"
+                                        },
+                                        "arguments": [
+                                            {
+                                                "type": "Identifier",
+                                                "name": "_cont1"
+                                            }
+                                        ],
+                                        "names": []
+                                    }
+                                }
+                            }
+                        ]
                     },
                     "visibility": "default",
-                    "modifiers": [
-                        {
-                            "type": "ModifierInvocation",
-                            "name": "Cont1",
-                            "arguments": []
-                        }
-                    ],
+                    "modifiers": [],
                     "isConstructor": true,
                     "isFallback": false,
                     "isReceive": false,
@@ -97,7 +151,7 @@
                                                     "type": "MemberAccess",
                                                     "expression": {
                                                         "type": "Identifier",
-                                                        "name": "Cont1"
+                                                        "name": "cont1"
                                                     },
                                                     "memberName": "freed"
                                                 },

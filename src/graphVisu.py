@@ -16,11 +16,12 @@ class graphManager:
         return self
 
     def addContract(self, cont: str):
-        self.__G.add_node(cont)
+        cont = cont.lower()
         if cont in self.__data.keys():
             warnings.warn(f"Contract {cont} already exists")
         else:
             self.__data[cont] = {}
+            self.__G.add_node(cont)
 
     def addFunction(self, cont: str, func: str):
         self.__add_entity(cont, func, True)
@@ -29,15 +30,17 @@ class graphManager:
         self.__add_entity(cont, var, False)
 
     def __add_entity(self, cont: str, name: str, is_function: bool):
-        full_name = f"{cont}.{'F' if is_function else 'V'}.{name}"
-        self.__G.add_node(full_name)
+        cont = cont.lower()
+        name = name.lower()
+        full_name = f"{cont}.{'f' if is_function else 'v'}.{name}"
         if cont in self.__data.keys():
             if name in self.__data[cont].keys():
-                raise Exception(f"{'Function' if is_function else 'Variable'} {name} already exists")
+                warnings.warn(f"{'Function' if is_function else 'Variable'} {name} already exists")
             else:
                 self.__data[cont][name] = {}
         else:
             raise Exception(f"Contract {cont} not found")
+        self.__G.add_node(full_name)
         self.__addEdge(cont, full_name, 'contains')
 
     def funcCallsFunc(self, func1: str, func2: str):
@@ -50,7 +53,9 @@ class graphManager:
         self.__addEdge(funcParse(func1), varParse(var1), 'writes')
 
     def __addEdge(self, node1: str, node2: str, label: str):
-        self.__G.add_edge(node1, node2)
+        node1 = node1.lower()
+        node2 = node2.lower()
+        self.__G.add_edge(node1, node2, label=label)
         self.__edge_labels[(node1, node2)] = label
 
     def save(self, path: str):
@@ -62,6 +67,9 @@ class graphManager:
         # load graph object from file
         with open(path, 'rb') as f:
             self.__G = pickle.load(f)
+
+    def getGraph(self) -> (nx.MultiDiGraph, dict):
+        return self.__G, self.__edge_labels
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.save('graph.pickle')
@@ -124,12 +132,12 @@ class graphManager:
 def nodeOrdering(nodes: [str]) -> [str]:
     new = []
     cont = ''
-    current = 'F'
+    current = 'f'
     for index, node in enumerate(sorted(nodes)):
         if node.split('.')[0] == node:
             cont = node
         elif node.split('.')[1] != current:
-            if current == 'F':
+            if current == 'f':
                 new.append(cont)
             new.append(node)
             current = node.split('.')[1]

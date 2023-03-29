@@ -1,7 +1,8 @@
+from networkx import MultiDiGraph
 from graphVisu import graphManager
 from parser import contract_parser
 from json import dumps
-from typing import Callable
+from typing import Callable, Generator
 
 
 def jd(x):
@@ -73,10 +74,15 @@ def search_dict(
     return results
 
 
-if __name__ == '__main__':
-    with graphManager(draw=True) as G:
-        for cont in contract_parser('contracts_parsed/**.sol.json'):
-            # jd(dumps)
+def genGRaph(
+    path: [
+        str,
+        Generator[str, None, None]
+    ],
+    draw: bool = False
+) -> (MultiDiGraph, dict):
+    with graphManager(draw=draw) as G:
+        for cont in contract_parser(path):
             name = findName(cont)
             G.addContract(name)
 
@@ -125,3 +131,10 @@ if __name__ == '__main__':
                     elif res['type'] == 'BinaryOperation':
                         if res['left']['type'] == 'Identifier':
                             G.funcWritesVar(f"{name}.{func_name}", f"{name}.{res['left']['name']}")
+    return G.getGraph()
+
+
+if __name__ == '__main__':
+    graph = genGRaph('contracts_parsed/**.sol.json', draw=True)
+    for x in graph:
+        print(x)

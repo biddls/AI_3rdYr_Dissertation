@@ -10,7 +10,7 @@ def get_contracts(
         path: [
             str, Generator[str, None, None],
             Callable[
-                [str],
+                [],
                 list[str]
             ]
         ],
