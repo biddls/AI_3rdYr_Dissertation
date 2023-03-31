@@ -1,6 +1,6 @@
 from networkx import MultiDiGraph
 from graphVisu import graphManager
-from parser import contract_parser
+from __parser import contract_parser
 from json import dumps
 from typing import Callable, Generator
 
@@ -13,7 +13,7 @@ def jd(x):
 def findInArray(
         array: [dict],
         key: str,
-        finder: bool | Callable[[dict], bool],
+        finder,#: bool | Callable[[dict], bool],
         value: str
 ) -> (any, int):
     # iterates over the array

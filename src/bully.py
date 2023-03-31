@@ -1,9 +1,61 @@
-import pytest
-from brownie import accounts, Contract, config, network
+from brownie import accounts, Contract, network
 from loader import get_contracts
 from graphGen import genGRaph
 from glob import glob
 import json
+
+network.connect('development')
+
+def deploy(_byte_code, _param=None):
+    if _param is not None:
+        _byte_code += "000000000000000000000000" + _param[2:]
+
+    _comp = accounts[0].transfer(data=_byte_code)
+
+    return _comp
+
+
+def link_contracts(
+        _contracts: [str],
+        log=False
+) -> dict[str, Contract]:
+    if log:
+        _p = lambda x: print(x)
+    else:
+        _p = lambda x: None
+
+    # get the abi for each contract
+    abi = []
+    comped1 = glob('../contracts/artifacts/contracts/*.sol/*.json')
+    comped2 = glob('../contracts/artifacts/contracts/*.sol/*.dbg.json')
+
+    comped = list(set(comped1) - set(comped2))
+
+    assert len(comped) == len(_contracts)
+
+    contracts = {}
+    last = None
+    comped = list(sorted(comped))
+
+    for comp, cont in zip(comped, _contracts):
+        _p(f"Deploying: {cont} from {comp}")
+        with open(comp, 'r') as f:
+            comp = json.load(f)
+
+        byte_code = comp['bytecode']
+        if last is not None:
+            comp = deploy(byte_code, _param=last)
+        else:
+            comp = deploy(byte_code)
+
+        last = comp.contract_address
+        comp = Contract.from_abi(cont, last, abi)
+
+        contracts[cont] = comp
+        _p(f"Done: {cont} at {last}")
+
+    return contracts
+
 
 if __name__ == "__main__":
     # get the contracts parsed and into a graph
@@ -20,34 +72,4 @@ if __name__ == "__main__":
             if edge[0] not in conts:
                 conts.append(edge[0])
 
-    print(conts)
-
-    # get the abi for each contract
-    abi = []
-    comped1 = glob('../contracts/artifacts/contracts/*.sol/*.json')
-    comped2 = glob('../contracts/artifacts/contracts/*.sol/*.dbg.json')
-
-    comped = list(set(comped1) - set(comped2))
-
-    assert len(comped) == len(conts)
-
-    contracts = {}
-    last = None
-    for comp, cont in zip(comped, conts):
-        with open(comp, 'r') as f:
-            comp = json.load(f)
-
-        byte_code = comp['bytecode']
-        comp = accounts[0].transfer(data=byte_code)
-        if last is not None:
-            comp = Contract.from_abi(cont, comp.address(), abi)
-        last = comp
-
-        contracts[cont] = comp
-
-
-
-    # deployment_bytecode = "0x6103f056600035601c52740100..."
-    # br.accounts[0].transfer(data=deployment_bytecode)
-    # br.Contract.from_abi("Token", "0x79447c97b6543F6eFBC91613C655977806CB18b0", abi)
-
+    conts = link_contracts(conts)

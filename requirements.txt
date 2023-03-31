@@ -1,1 +1,5 @@
 git+https://github.com/florian1345/python-solidity-parser@eb548d1#egg=solidity_parser
+networkx~=3.0
+matplotlib~=3.7.1
+pytest~=6.2.5
+eth-brownie~=1.19.3

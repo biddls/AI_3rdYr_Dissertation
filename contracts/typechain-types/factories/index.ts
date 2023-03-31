@@ -4,4 +4,3 @@
 export { Cont1__factory } from "./Cont1__factory";
 export { Cont2__factory } from "./Cont2__factory";
 export { Cont3__factory } from "./Cont3__factory";
-export { Lock__factory } from "./Lock__factory";

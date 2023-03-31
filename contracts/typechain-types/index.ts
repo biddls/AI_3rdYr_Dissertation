@@ -4,9 +4,7 @@
 export type { Cont1 } from "./Cont1";
 export type { Cont2 } from "./Cont2";
 export type { Cont3 } from "./Cont3";
-export type { Lock } from "./Lock";
 export * as factories from "./factories";
 export { Cont1__factory } from "./factories/Cont1__factory";
 export { Cont2__factory } from "./factories/Cont2__factory";
 export { Cont3__factory } from "./factories/Cont3__factory";
-export { Lock__factory } from "./factories/Lock__factory";
