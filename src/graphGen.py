@@ -80,7 +80,7 @@ def genGRaph(
         Generator[str, None, None]
     ],
     draw: bool = False
-) -> (MultiDiGraph, dict):
+) -> list[(str, str, dict[str, str])]:
     with graphManager(draw=draw) as G:
         for cont in contract_parser(path):
             name = findName(cont)
@@ -131,7 +131,7 @@ def genGRaph(
                     elif res['type'] == 'BinaryOperation':
                         if res['left']['type'] == 'Identifier':
                             G.funcWritesVar(f"{name}.{func_name}", f"{name}.{res['left']['name']}")
-    return G.getGraph()
+    return [(x1, x2, x4) for x1, x2, x3, x4 in G.getGraph()[0].edges.data(keys=True)]
 
 
 if __name__ == '__main__':
