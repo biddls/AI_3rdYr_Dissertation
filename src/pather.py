@@ -1,11 +1,12 @@
 from typing import Generator
 
+__logging = False
+
 
 def __p(
-        _x: any,
-        logging: bool = False
+        _x: any
 ) -> None:
-    if logging:
+    if __logging:
         print(_x)
 
 
@@ -14,10 +15,18 @@ def graphTraversal(
         _current: list[str],
         _maxDepth: int or float = 10  # can be set to float('inf') to perpetually search
 ) -> Generator[list[str], None, None]:
-    # find the functions that write to the target
+    """
+    Returns a generator that yields all paths from the target outwards from the smallest path to largest or when the
+    max depth is reached
+    :param _graph:
+    :param _current:
+    :param _maxDepth:
+    :return:
+    """
     edges: list[(str, str, dict[str, str])] = []
+    # find the functions that write to the target
     for edge in filter(lambda _x: _x[2]['label'] != 'contains', _graph):
-        # print(edge, _current)
+        # checks if the node is at either end of the edge
         if _current[-1] in edge[:2]:
             # ensuring that the directionality of the graph is adhered to
             # if _current is a variable
@@ -31,6 +40,8 @@ def graphTraversal(
                 edges.append(edge[1])
     __p(f"Output:\n{edges = }")
 
+    # the yield statements have to be here so that the paths are returned
+    # in the correct order else it becomes a depth first search
     # ensures that the shallowest paths are returned first
     for edge in edges:
         temp = variableFilter(_current + [edge])
@@ -38,6 +49,11 @@ def graphTraversal(
             yield temp
         __p(f"{_current + [edge] = }")
 
+    # breaks the recursion if the max depth is reached
+    if _maxDepth == 0:
+        return
+
+    # recursively calls the function to find the next layer of paths
     for edge in edges:
         a = graphTraversal(_graph, _current + [edge], _maxDepth - 1)
         for _x in a:
