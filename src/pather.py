@@ -1,29 +1,35 @@
-from typing import Generator
+from typing import Generator, List, Tuple, Dict, Union, Any
 
-__logging = False
+
+__logging: bool = False
 
 
 def __p(
-        _x: any
+        _x: Any
 ) -> None:
+    """
+    Helper function to print the input argument `_x` if `__logging` is True
+    """
     if __logging:
         print(_x)
 
 
 def graphTraversal(
-        _graph: list[(str, str, dict[str, str])],
-        _current: list[str],
-        _maxDepth: int or float = 10  # can be set to float('inf') to perpetually search
-) -> Generator[list[str], None, None]:
+        _graph: List[Tuple[str, str, Dict[str, str]]],
+        _current: List[str],
+        _maxDepth: Union[int, float] = 10.0
+) -> Generator[List[str], None, None]:
     """
     Returns a generator that yields all paths from the target outwards from the smallest path to largest or when the
     max depth is reached
-    :param _graph:
-    :param _current:
-    :param _maxDepth:
-    :return:
+    :param _graph: A list of tuples representing edges in the graph. Each tuple has three elements: the start node,
+    the end node, and a dictionary of edge attributes.
+    :param _current: A list of strings representing the current node.
+    :param _maxDepth: The maximum depth to traverse the graph. Defaults to 10, which can be set to float('inf') to
+    perpetually search.
+    :return: A generator that yields lists of strings representing the paths from the target outwards.
     """
-    edges: list[(str, str, dict[str, str])] = []
+    edges: List[str] = []
     # find the functions that write to the target
     for edge in filter(lambda _x: _x[2]['label'] != 'contains', _graph):
         # checks if the node is at either end of the edge
@@ -61,8 +67,13 @@ def graphTraversal(
 
 
 def variableFilter(
-        _list: list[str]
-) -> list[str]:
+        _list: List[str]
+) -> List[str]:
+    """
+    Returns a filtered list that excludes any string that has the string ".v" as its second element.
+    :param _list: A list of strings to filter.
+    :return: A filtered list of strings.
+    """
     try:
         return list(filter(lambda _x: (_x.split('.')[1]) != 'v', _list))
     except TypeError as e:
