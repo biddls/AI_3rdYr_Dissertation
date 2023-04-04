@@ -1,8 +1,7 @@
-from networkx import MultiDiGraph
 from graphVisu import graphManager
 from __parser import contract_parser
 from json import dumps
-from typing import Callable, Generator
+from typing import Generator
 
 
 def jd(x):

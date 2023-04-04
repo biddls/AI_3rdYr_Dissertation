@@ -1,5 +1,3 @@
-# https://github.com/florian1345/python-solidity-parser
-# pip install 'solidity_parser @ '
 from glob import glob
 import json
 from solidity_parser import parser
