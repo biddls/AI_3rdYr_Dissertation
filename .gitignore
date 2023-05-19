@@ -1,11 +1,18 @@
 .idea/
 venv/
 __pycache__/
+src/graph.pickle
 contracts/.idea/
 contracts/artifacts/
 contracts/cache/
 contracts/node_modules/
 contracts/typechain-types/
-src/graph.pickle
 /contracts/cache/
 /contracts/typechain-types/
+Documentation/*.csv
+Documentation/*.pptx
+Documentation/*.xlsx
+Documentation/*.docx
+Documentation/resources
+Documentation/Meeting write ups/0 supervision form.md
+Documentation/*.md

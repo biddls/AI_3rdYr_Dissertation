@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, Optional, List, Dict
 import brownie.typing
 from brownie import accounts, Contract, network, chain, rpc
 from loader import get_contracts
@@ -11,9 +11,19 @@ network.connect('development')
 
 
 def deploy(
-        _byte_code,
-        _param=None
+        _byte_code: str,
+        _param: Optional[str] = None
 ) -> brownie.typing.TransactionReceiptType:
+    """
+    Deploy a smart contract to the blockchain.
+
+    Args:
+        _byte_code: The bytecode of the contract to be deployed.
+        _param: Optional parameter to pass to the contract constructor.
+
+    Returns:
+        The transaction receipt of the deployment.
+    """
     if _param is not None:
         _byte_code += "000000000000000000000000" + _param[2:]
 
@@ -23,11 +33,21 @@ def deploy(
 
 
 def link_contracts(
-        _contracts: [str],
-        log=False
-) -> dict[str, Contract]:
+        _contracts: List[str],
+        log: bool = False
+) -> Dict[str, Contract]:
+    """
+    Link the contracts to their corresponding bytecode and deploy them to the blockchain.
+
+    Args:
+        _contracts: A list of contract names to be deployed.
+        log: A boolean flag indicating whether to print log messages.
+
+    Returns:
+        A dictionary of deployed contract instances with the contract name as the key.
+    """
     if log:
-        _p = lambda x: print(x)
+        _p = print
     else:
         _p = lambda x: None
 
@@ -35,18 +55,18 @@ def link_contracts(
     comped1 = glob('../contracts/artifacts/contracts/*.sol/*.json')
     comped2 = glob('../contracts/artifacts/contracts/*.sol/*.dbg.json')
 
-    comped: [str] = list(set(comped1) - set(comped2))
+    comped: List[str] = list(set(comped1) - set(comped2))
 
     if not len(comped) == len(_contracts):
         raise Exception("Contract count mismatch")
 
     contractMapping = {}
     last = None
-    comped = list(sorted(comped))
+    comped: List[str] = list(sorted(comped))
 
     for comp, cont in zip(comped, _contracts):
         _temp = f"Deployed: {cont} from {comp}"
-        with open(comp, 'r') as f:
+        with open(str(comp), 'r') as f:
             comp = json.load(f)
 
         byte_code = comp['bytecode']
@@ -66,10 +86,24 @@ def link_contracts(
 
 
 def manager(
-        _contracts: [str, Contract],
-        _path: Generator[list[str], None, None],
+        _contracts: Dict[str, brownie.network.contract.Contract],
+        _path: Generator[List[str], None, None],
         _target: brownie.typing.TransactionReceiptType
-) -> list[str] or None:
+) -> List[str] or None:
+    """
+    Given a list of contracts, a graph traversal path and a target value,
+    this function tests each path, in reverse order, to determine whether
+    it leads to the target value. If a successful path is found, it is returned.
+
+    Args:
+        _contracts: A dictionary containing the contracts to be tested.
+        _path: A generator object containing the paths to be tested.
+        _target: The target value to be reached.
+
+    Returns:
+        - If a path to the target is found, the function returns the path as a list of strings.
+        - If a path to the target is not found, the function returns None.
+    """
     # current target value
     _currentTarget = _target()
     print("\n")
@@ -113,7 +147,7 @@ if __name__ == "__main__":
                 contracts.append(edge[0])
 
     # deploy the contracts
-    contracts = link_contracts(contracts, log=True)
+    contracts: Dict[str, Contract] = link_contracts(contracts, log=True)
 
     # creates a snapshot of the current state of the blockchain
     chain.snapshot()
